@@ -1,0 +1,24 @@
+name: WeCom Smoke Reminder
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 北京时间 周一到周五 10:03-17:03
+    # GitHub Actions 默认使用 UTC，所以这里是 UTC 02:03-09:03
+    - cron: '3 2-9 * * 1-5'
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send smoke reminder to WeCom
+        run: |
+          curl -sS '${{ secrets.WECOM_WEBHOOK }}' \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "msgtype": "text",
+              "text": {
+                "content": "温馨提示，到点了该抽烟了！"
+              }
+            }'
