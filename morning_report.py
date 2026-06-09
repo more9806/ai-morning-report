@@ -1,11 +1,8 @@
 import os
 import requests
-from openai import OpenAI
 
-OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+AGNES_API_KEY = os.environ["AGNES_API_KEY"]
 WEWORK_WEBHOOK = os.environ["WEWORK_WEBHOOK"]
-
-client = OpenAI(api_key=OPENAI_API_KEY)
 
 prompt = """
 你是一个服务于信息流广告剪辑师的AI晨报助手。
@@ -17,8 +14,8 @@ prompt = """
 # 今日信息流广告AI晨报
 
 ## 1. AI要闻
-筛选最近24-48小时内，和以下方向有关的AI新闻：
-AI视频、AI图片、AI剪辑、AI配音、数字人、AI Agent、广告创意工具、自动化工作流。
+关注最近AI行业里对信息流广告剪辑师有用的内容：
+AI视频、AI图片、AI剪辑、AI配音、数字人、广告创意工具、自动化工作流。
 
 每条格式：
 - 【标题】
@@ -27,7 +24,7 @@ AI视频、AI图片、AI剪辑、AI配音、数字人、AI Agent、广告创意�
   建议动作：
 
 ## 2. 平台政策
-重点关注：
+关注：
 抖音/巨量引擎、快手磁力引擎、小红书聚光、微信广告、视频号、TikTok、Meta Ads。
 
 每条格式：
@@ -51,18 +48,34 @@ AI视频、图片生成、自动剪辑、字幕、配音、数字人、广告素
 要求：
 - 不要写空话
 - 不要堆砌新闻
-- 优先选择和信息流广告剪辑工作相关的内容
 - 每部分3-5条
 - 输出适合企业微信 markdown 的格式
 """
 
-response = client.responses.create(
-    model="gpt-4.1-mini",
-    tools=[{"type": "web_search_preview"}],
-    input=prompt
-)
+url = "https://apihub.agnes-ai.com/v1/chat/completions"
 
-report = response.output_text
+headers = {
+    "Authorization": f"Bearer {AGNES_API_KEY}",
+    "Content-Type": "application/json"
+}
+
+data = {
+    "model": "agnes-1.5-flash",
+    "messages": [
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ],
+    "temperature": 0.5,
+    "max_tokens": 3000
+}
+
+response = requests.post(url, headers=headers, json=data, timeout=60)
+response.raise_for_status()
+
+result = response.json()
+report = result["choices"][0]["message"]["content"]
 
 payload = {
     "msgtype": "markdown",
