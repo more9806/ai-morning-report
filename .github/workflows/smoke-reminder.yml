@@ -1,4 +1,4 @@
-name: Smoke Reminderr
+name: Smoke Reminder Test
 
 on:
   schedule:
