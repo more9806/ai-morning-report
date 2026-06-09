@@ -5,7 +5,7 @@ on:
   schedule:
     # 北京时间 周一到周五 10:03-17:03
     # GitHub Actions 默认使用 UTC，所以这里是 UTC 02:03-09:03
-    - cron: '3 2-9 * * 1-5'
+  - cron: '*/5 * * * *'
 
 jobs:
   send:
