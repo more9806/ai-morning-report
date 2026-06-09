@@ -1,4 +1,4 @@
-name: Smoke Reminder
+name: Smoke Reminderr
 
 on:
   schedule:
