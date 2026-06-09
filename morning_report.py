@@ -85,6 +85,14 @@ payload = {
 }
 
 r = requests.post(WEWORK_WEBHOOK, json=payload, timeout=30)
+
+print("企业微信返回状态码：", r.status_code)
+print("企业微信返回内容：", r.text)
+
 r.raise_for_status()
+
+result = r.json()
+if result.get("errcode") != 0:
+    raise Exception(f"企业微信发送失败：{result}")
 
 print("晨报已发送")
