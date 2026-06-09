@@ -1,7 +1,6 @@
 name: WeCom Smoke Reminder
 
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: '*/5 * * * *'
@@ -11,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Show trigger type
+        run: |
+          echo "当前触发方式是：${{ github.event_name }}"
+
       - name: Send smoke reminder to WeCom
         run: |
           echo "开始发送企业微信消息"
