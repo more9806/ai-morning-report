@@ -3,7 +3,9 @@ name: WeCom Smoke Reminder
 on:
   workflow_dispatch:
   schedule:
-    - cron: '3 2-9 * * 1-5'
+    # 北京时间周一到周五 10:07-17:07
+    # GitHub 用 UTC，所以这里是 UTC 02:07-09:07
+    - cron: '7 2-9 * * 1-5'
 
 jobs:
   send:
